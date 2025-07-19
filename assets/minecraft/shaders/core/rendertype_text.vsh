@@ -8,10 +8,6 @@ in vec2 UV0;
 in ivec2 UV2;
 
 uniform sampler2D Sampler2;
-<<<<<<< HEAD
-uniform sampler2D Sampler0;
-=======
->>>>>>> 47cfe4c8f236bde88407f1d9ab1bbb86e51ba7e2
 
 uniform mat4 ModelViewMat;
 uniform mat4 ProjMat;
@@ -24,33 +20,14 @@ out vec3 pos;
 out vec4 lightMapColor;
 out vec4 screenPos;
 
-<<<<<<< HEAD
-//out vec4 justColor;
-
-void main() {
-    float alpha = texture(Sampler0, UV0).a;
-    vec3 newPos = Position;
-    if (ProjMat[3][0] != -1 && alpha < 1.0 && alpha > 0.0) {
-        newPos += vec3(0.0, 2.0, 0.0);
-    }
-    gl_Position = ProjMat * ModelViewMat * vec4(newPos, 1.0);
-=======
 void main() {
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
->>>>>>> 47cfe4c8f236bde88407f1d9ab1bbb86e51ba7e2
     pos = Position;
     screenPos = ModelViewMat * vec4(Position, 1.0);
 
     vertexDistance = fog_distance(Position, FogShape);
-<<<<<<< HEAD
     lightMapColor = texelFetch(Sampler2, UV2 / 16, 0);
     vertexColor = Color * lightMapColor;
 
-    //justColor = Color;
-
-=======
-    vertexColor = Color * texelFetch(Sampler2, UV2 / 16, 0);
-    lightMapColor = texelFetch(Sampler2, UV2 / 16, 0);
->>>>>>> 47cfe4c8f236bde88407f1d9ab1bbb86e51ba7e2
     texCoord0 = UV0;
 }
