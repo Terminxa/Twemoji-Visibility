@@ -16,13 +16,16 @@ uniform int FogShape;
 out float vertexDistance;
 out vec4 vertexColor;
 out vec2 texCoord0;
-out vec3 pos;
 out vec4 lightMapColor;
 out vec4 screenPos;
+out float pos;
+out float isGui;
 
 void main() {
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
-    pos = Position;
+
+    pos = Position.z;
+    isGui = ProjMat[3][0];
     screenPos = ModelViewMat * vec4(Position, 1.0);
 
     vertexDistance = fog_distance(Position, FogShape);

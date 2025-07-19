@@ -8,54 +8,40 @@ uniform vec4 ColorModulator;
 uniform float FogStart;
 uniform float FogEnd;
 uniform vec4 FogColor;
-uniform vec2 ScreenSize;
-
 in float vertexDistance;
 in vec4 vertexColor;
 in vec2 texCoord0;
-in vec3 pos;
 in vec4 lightMapColor;
-in vec4 screenPos;
+in float pos;
+in float isGui;
 
 out vec4 fragColor;
 
 void main() {
     vec4 color = texture(Sampler0, texCoord0) * ColorModulator;
-    if (color.a == 1.0 || color.a == 0.0) {
-        color *= vertexColor;
-//               chat text          input        emoji selector      shown chat       cp chat text    cp shown chat         tooltips           title             subtitle           bossbar
-    } else if (pos.z == 50.0 || pos.z == 0.0 || pos.z == 350.0 || pos.z == 2650.0 || pos.z == 0.1 || pos.z == 2600.1 || pos.z == 400.0 || pos.z == 2400.0 || pos.z == 2200.0 || pos.z == 1000.0) { // Note: the 'input' is the one that also interferes with the book text
-        if (pos.z == 0.0 && screenPos.y > (ScreenSize.y / 5.0) || pos.z != 0.0) {
-            color *= vec4(62.0/252.0, 62.0/252.0,62.0/252.0, vertexColor.a) * lightMapColor;
-        }
-    } else {
-        color.a *= vertexColor.a;
-        color *= lightMapColor;
-        /*
-        // fix glowing
-        // Make sure it's the background
-        vec4 testColor = color * justColor;
-        vec4 whiteTestColor = vec4(1.0, 1.0, 1.0, 1.0) * color;
-        float rDiff = abs(testColor.r - whiteTestColor.r);
-        float gDiff = abs(testColor.g - whiteTestColor.g);
-        float bDiff = abs(testColor.b - whiteTestColor.b);
-
-        if (rDiff > 0.0001 && gDiff > 0.0001 && bDiff > 0.0001 && 
-            lightMapColor.r > 251.9 / 255.0 && lightMapColor.r < 252.1 / 255.0 && 
-            lightMapColor.g > 251.9 / 255.0 && lightMapColor.g < 252.1 / 255.0 && 
-            lightMapColor.b > 251.9 / 255.0 && lightMapColor.b < 252.1 / 255.0 &&
-            FogStart < FogEnd) {
-            discard;
-        }
-        */
-    }
-    if (color.a < 0.1) {
+    bool isEmoji = (color.rgb != vec3(1.0)); // changed all emoji white colors to be slightly non white
+    float depth = pos;
+    if (color.a < 0.05) { // if you only cut out alpha values of 0, some of the super transparent parts look ugly. best not to think about it.
         discard;
     }
-//            sign           sign editor
-    if ((FogStart < FogEnd || pos.z == 54.0) && color.a < 1.0) {
-        float light = (lightMapColor.r + lightMapColor.g + lightMapColor.b) / 3.0;
-        color.a = mix(color.a, light, abs(1.0 - color.a));
+    if (!isEmoji) {
+        color *= vertexColor; // basically tint everything that isn't an emoji with what it would be tinted in vanilla
+//                               book text                                                                                actionbar          subtitle                                              mcpvp victory title
+//               chat text        & input       emoji selector      shown chat       cp chat text     cp shown chat       & tooltips          & title            bossbar              tab           (idk what else)
+    } else if (depth == 50.0 || depth == 0.0 || depth == 350.0 || depth == 2650.0 || depth == 0.1 || depth == 2600.1 || depth == 400.0 || depth == 2400.0 || depth == 2200.0 || depth == 1000.0 || depth == 3000.004) { 
+        if (depth != 0.0) { // as long as its not book text, input text, resource selection screen text, or emoji selection text
+            color *= vec4(vec3(62.0/252.0), vertexColor.a) * lightMapColor; // darken it the vanilla text shadow amount
+        }
+    } else if (depth == 0.03) { // normal non shadow text for books, chat input, resource selection screen, and emoji selection screen
+        discard;
+    } else { // if it's not text shadow
+        color.a *= vertexColor.a;
+        color *= lightMapColor;
+    }
+    if (isGui != -1) { // if it's a sign
+        // fake the transparency by mixing transparent colors with a dark version of themselves then making it opaque
+        color.rgb = mix(color.rgb * vec3(5.0 / 6.0), color.rgb, color.a);
+        color.a = 1.0;
     }
     fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
 }
