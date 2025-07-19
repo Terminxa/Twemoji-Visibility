@@ -8,6 +8,7 @@ uniform vec4 ColorModulator;
 uniform float FogStart;
 uniform float FogEnd;
 uniform vec4 FogColor;
+
 in float vertexDistance;
 in vec4 vertexColor;
 in vec2 texCoord0;
@@ -26,9 +27,9 @@ void main() {
     }
     if (!isEmoji) {
         color *= vertexColor; // basically tint everything that isn't an emoji with what it would be tinted in vanilla
-//                               book text                                                                                actionbar          subtitle                                              mcpvp victory title
-//               chat text        & input       emoji selector      shown chat       cp chat text     cp shown chat       & tooltips          & title            bossbar              tab           (idk what else)
-    } else if (depth == 50.0 || depth == 0.0 || depth == 350.0 || depth == 2650.0 || depth == 0.1 || depth == 2600.1 || depth == 400.0 || depth == 2400.0 || depth == 2200.0 || depth == 1000.0 || depth == 3000.004) { 
+//                               book text                                                                                actionbar          subtitle                                             mcpvp victory title  mcpvp action bars
+//               chat text        & input       emoji selector      shown chat       cp chat text     cp shown chat       & tooltips          & title            bossbar              tab           (idk what else)     (idk what else)
+    } else if (depth == 50.0 || depth == 0.0 || depth == 350.0 || depth == 2650.0 || depth == 0.1 || depth == 2600.1 || depth == 400.0 || depth == 2400.0 || depth == 2200.0 || depth == 1000.0 || depth == 3000.004 || depth == 2800.0) { 
         if (depth != 0.0) { // as long as its not book text, input text, resource selection screen text, or emoji selection text
             color *= vec4(vec3(62.0/252.0), vertexColor.a) * lightMapColor; // darken it the vanilla text shadow amount
         }
