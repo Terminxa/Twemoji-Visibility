@@ -7,11 +7,27 @@
             "max_inclusive": 500
         }
     },
+    "overlays": {
+        "entries": [
+        {
+            "directory": "1.21.3",
+            "formats": [35, 42]
+        },
+        {
+            "directory": "1.21.4",
+            "formats": [43, 46]
+        },
+        {
+            "directory": "1.21.5",
+            "formats": [47, 500]
+        }
+        ]
+    },
     "filter": {
         "block": [
             {
                 "namespace": "symbol-chat",
-                "path": "symbol_tabs/(all|faces_people|nature_food|things|activities_transport_places|symbols|shapes|favorites)\\.json"
+                "path": "symbol_tabs/(search|faces_people|nature_food|things|activities_transport_places|symbols|shapes|favorites)\\.json"
             }
         ]
     }
